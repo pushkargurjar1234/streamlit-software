@@ -326,10 +326,7 @@ def Startup_Analysis(startup):
 
 st.sidebar.header("Startup Funding Analysis")
 
-coll1,coll2,coll3=st.columns(3)
-with coll2:
-    st.header(" Startup Funding Analysis")
-    st.write("This project analyzes India's startup funding landscape, providing insights into top investors, funding trends, emerging startups, and sector-wise growth patterns using real-world data")
+
 
 
 option=st.sidebar.selectbox("select one ",['OverAll Analysis', "Investor Analysis", "Startups Anaylis" ])
