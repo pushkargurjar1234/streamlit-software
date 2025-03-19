@@ -242,6 +242,56 @@ def general_analysis():
     
 
 
+def Startup_Analysis(startup):
+    st.title(startup)
+
+    col20,col21=st.columns(2)
+    with col20:
+        st.header("Investor")
+        startup_investors = data[data['startup'].str.contains("Flipkart", case=False)]
+        investors_startup = startup_investors['investor'].str.split(',', expand=True).stack().reset_index(drop=True)
+        st.dataframe(investors_startup)
+
+    st.divider()
+
+    col22,col23=st.columns(2)
+
+    with col22:
+        st.title("Industry Vertical")
+        startup_industry=data[data["startup"].str.contains(startup, case=False)]
+        industry_startup=startup_industry["vertical"].str.split(",", expand=True).stack().reset_index(drop=True).drop_duplicates()
+        st.dataframe(industry_startup)
+
+    with col23:
+        st.title("SubIndustres")
+        startup_subindustry=data[data["startup"].str.contains(startup, case=False)]
+        subindustry_startup=startup_subindustry["subvertical"].str.split(",", expand=True).stack().reset_index(drop=True).drop_duplicates()
+        st.dataframe(subindustry_startup)
+
+
+    st.divider()
+        
+    
+    col24,col25=st.columns(2)
+    with col24:
+        st.title("Location")
+        startup_location=data[data["startup"].str.contains(startup, case=False)]
+        location=startup_location["city"].str.split(",", expand=True).stack().reset_index(drop=True).drop_duplicates()
+        st.dataframe(location)
+
+    with col25:
+        st.title("Funding Stage")
+        startup_round=data[data["startup"].str.contains(startup, case=False)]
+        round=startup_round["round"].str.split(",", expand=True).stack().reset_index(drop=True).drop_duplicates()
+        st.dataframe(round)
+
+    st.divider()
+
+    st.title("Funding Journey Insights")
+    insights=data[data["startup"].str.contains("Flipkart")][["date","vertical","city","investor","amount"]]
+    st.dataframe(insights)
+
+
 
 
 
@@ -270,6 +320,6 @@ if option=="Startups Anaylis":
     startup=st.sidebar.selectbox("Startup Name ",(data["startup"].unique().tolist()) )
     btn1=st.sidebar.button("Startup Analysis")
     if btn1:
-        st.header("back")
+        Startup_Analysis(startup)
 
 
