@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 st.set_page_config(layout="wide",page_title="Startup Analysis")
 
 data=pd.read_csv("cleaned_data_of_startups.csv")
+# dete=data
+# dete["date"]=pd.to_datetime(data['date'], errors='coerce')
 
 
 
@@ -128,7 +130,7 @@ def investor_page(investors):
 
 
 def general_analysis():
-    st.title("OverAll Analysis")
+    st.title("OverAll Analysis (in crores)")
 
 
     st.divider()
@@ -150,13 +152,94 @@ def general_analysis():
         st.metric("Average",str(mean)+"cr")
 
     st.divider()
-    # year by year chart
+    # top sectors
+    st.title("Top Sectors")
+    col14,col15=st.columns(2)
+    
+    with col14:
+        st.header("Table")
+        top=data.groupby("vertical")["amount"].sum().sort_values(ascending=False).head().round()
+        st.dataframe(top)
    
+    st.divider()
+    
+    with col15:
+        st.header("Bar Chart")
+        fig10,ax10=plt.subplots()
+        ax10.bar(top.index,top.values)
+        st.pyplot(fig10)
 
-   
+
+        
 
 
+#    top type of funding
 
+    st.title("Top Investment Rounds")
+    col16,col17=st.columns(2)
+    
+    with col16:
+        st.header("Table")
+        top_round=data.groupby("round")["amount"].sum().sort_values(ascending=False).head().round()
+        st.dataframe(top_round)
+
+    with col17:
+        st.header("Bar Chart")
+        fig11,ax11=plt.subplots()
+        ax11.bar(top_round.index,top_round.values)
+        st.pyplot(fig11)
+
+
+    st.divider()
+# top cities funding
+    st.title("Top Invested Cities")
+    col18,col19=st.columns(2)
+    
+    with col18:
+        st.header("Table")
+        top_city=data.groupby("city")["amount"].sum().sort_values(ascending=False).head(6 ).round()
+        st.dataframe(top_city)
+
+    with col19:
+        st.header("Pie Chart")
+        fig12,ax12=plt.subplots()
+        ax12.pie(top_city,labels=top_city.index,autopct="%0.01f%%")
+        st.pyplot(fig12)
+
+
+        
+
+# top startups
+    st.title("Top Rising Startup")
+    col20,col21=st.columns(2)
+    
+    with col20:
+        st.header("Table")
+        top_startups=data.groupby("startup")["amount"].sum().sort_values(ascending=False).head().round()
+        st.dataframe(top_startups)
+
+    with col21:
+        st.header("Barchart")
+        fig13,ax13=plt.subplots()
+        ax13.bar(top_startups.index,top_startups.values)
+        st.pyplot(fig13)
+
+
+    st.divider()
+    st.title("Leading Investors Analysis")
+    col22,col23=st.columns(2)
+
+    with col22:
+        st.header("Table ")
+        top_investor=data.groupby("investor")["amount"].sum().sort_values(ascending=False).head(10)
+        st.dataframe(top_investor)
+
+    with col23:
+        st.header("Pie Chart")
+        fig14,ax14=plt.subplots()
+        ax14.pie(top_investor,labels=top_investor.index,autopct="%0.1f%%")
+        st.pyplot(fig14)
+    
 
 
 
@@ -172,7 +255,7 @@ st.sidebar.header("Startup Funding Analysis")
 option=st.sidebar.selectbox("select one ",['OverAll Analysis', "Investor Analysis", "Startups Anaylis" ])
 
 if option=="OverAll Analysis":
-    btn0=st.sidebar.button("Genral Analysis")
+    btn0=st.sidebar.button("OverAll Analysis")
     if btn0:
         general_analysis()
 
@@ -180,8 +263,8 @@ if option=="Investor Analysis":
     investor=st.sidebar.selectbox("Choose Investor",sorted(set(data["investor"].str.split(",").sum())))
     btn2=st.sidebar.button("Investor Analysis")
     if btn2:
-        # investor_page(investor)
-        st.title("byy")
+        investor_page(investor)
+        
 
 if option=="Startups Anaylis":
     startup=st.sidebar.selectbox("Startup Name ",(data["startup"].unique().tolist()) )
